@@ -1,4 +1,4 @@
-import type { McpServer } from 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp'
+import type { McpServer } from '../../../compiled/@modelcontextprotocol/sdk/server/mcp'
 import {
   HMR_MESSAGE_SENT_TO_BROWSER,
   type HmrMessageSentToBrowser,
@@ -28,7 +28,7 @@ export function registerGetPageMetadataTool(
         'Get runtime metadata about what contributes to the current page render from active browser sessions.',
       inputSchema: {},
     },
-    async (_request) => {
+    async (_request: unknown) => {
       // Track telemetry
       mcpTelemetryTracker.recordToolCall('mcp/get_page_metadata')
 

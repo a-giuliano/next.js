@@ -12,7 +12,7 @@
  * does NOT expand getStaticParams - it only shows the route patterns as defined in
  * the filesystem.
  */
-import type { McpServer } from 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp'
+import type { McpServer } from '../../../compiled/@modelcontextprotocol/sdk/server/mcp'
 import { mcpTelemetryTracker } from '../mcp-telemetry-tracker'
 import { discoverRoutes } from '../../../build/route-discovery'
 import type { NextConfigComplete } from '../../../server/config-shared'
@@ -36,7 +36,7 @@ export function registerGetRoutesTool(
         routerType: z.union([z.literal('app'), z.literal('pages')]).optional(),
       },
     },
-    async (request) => {
+    async (request: { routerType?: 'app' | 'pages' }) => {
       // Track telemetry
       mcpTelemetryTracker.recordToolCall('mcp/get_routes')
 

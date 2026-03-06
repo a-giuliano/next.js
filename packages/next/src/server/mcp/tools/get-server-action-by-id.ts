@@ -1,4 +1,4 @@
-import type { McpServer } from 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp'
+import type { McpServer } from '../../../compiled/@modelcontextprotocol/sdk/server/mcp'
 import { z } from 'next/dist/compiled/zod'
 import { promises as fs } from 'fs'
 import { join } from 'path'
@@ -29,7 +29,7 @@ export function registerGetActionByIdTool(server: McpServer, distDir: string) {
         actionId: z.string(),
       },
     },
-    async (request) => {
+    async (request: { actionId?: string }) => {
       // Track telemetry
       mcpTelemetryTracker.recordToolCall('mcp/get_server_action_by_id')
 

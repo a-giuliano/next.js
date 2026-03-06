@@ -8,7 +8,7 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "target": "ES2018",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "ignoreDeprecations": "6.0",
     "types": ["trusted-types", "jest", "node"],
     "paths": {
@@ -22,6 +22,12 @@
       "next/dist/client/app-call-server": ["./src/client/app-call-server.ts"],
       "next/dist/compiled/@edge-runtime/ponyfill": [
         "./src/compiled/@edge-runtime/ponyfill"
+      ],
+      "next/dist/compiled/@modelcontextprotocol/sdk/server/mcp": [
+        "./src/compiled/@modelcontextprotocol/sdk/server/mcp.d.ts"
+      ],
+      "next/dist/compiled/@modelcontextprotocol/sdk/server/streamableHttp": [
+        "./src/compiled/@modelcontextprotocol/sdk/server/streamableHttp.d.ts"
       ],
       "next/dist/compiled/@vercel/og/satori": [
         "./src/compiled/@vercel/og/satori"

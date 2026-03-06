@@ -20,7 +20,7 @@
 
     // modules
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
 
     // emit
     "noEmit": true,

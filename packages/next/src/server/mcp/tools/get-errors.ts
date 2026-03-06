@@ -13,7 +13,7 @@
  *   browser queries error overlay state → HMR response back → server performs source mapping →
  *   combined with global errors → formatted output.
  */
-import type { McpServer } from 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp'
+import type { McpServer } from '../../../compiled/@modelcontextprotocol/sdk/server/mcp'
 import type { OverlayState } from '../../../next-devtools/dev-overlay/shared'
 import {
   HMR_MESSAGE_SENT_TO_BROWSER,
@@ -40,7 +40,7 @@ export function registerGetErrorsTool(
         'Get the current error state from the Next.js dev server, including Next.js global errors (e.g., next.config validation), browser runtime errors, and build errors with source-mapped stack traces',
       inputSchema: {},
     },
-    async (_request) => {
+    async (_request: unknown) => {
       // Track telemetry
       mcpTelemetryTracker.recordToolCall('mcp/get_errors')
 

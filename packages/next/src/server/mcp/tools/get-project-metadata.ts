@@ -1,4 +1,4 @@
-import type { McpServer } from 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp'
+import type { McpServer } from '../../../compiled/@modelcontextprotocol/sdk/server/mcp'
 import { mcpTelemetryTracker } from '../mcp-telemetry-tracker'
 
 export function registerGetProjectMetadataTool(
@@ -13,7 +13,7 @@ export function registerGetProjectMetadataTool(
         'Returns the the metadata of this Next.js project, including project path, dev server URL, etc.',
       inputSchema: {},
     },
-    async (_request) => {
+    async (_request: unknown) => {
       // Track telemetry
       mcpTelemetryTracker.recordToolCall('mcp/get_project_metadata')
 
