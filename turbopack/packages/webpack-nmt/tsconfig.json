@@ -2,8 +2,10 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
+    "lib": ["es2020"],
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["node"]
   },
   "include": ["src"]
 }
