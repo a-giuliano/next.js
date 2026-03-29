@@ -1158,5 +1158,7 @@
   "1157": "`unstable_io()` requires the `experimental.unstableIO` option to be enabled in your Next.js config.",
   "1158": "The prerender-ppr work unit type has been removed. This code path should be unreachable.",
   "1159": "Daemon exited early with code %s",
-  "1160": "Turbopack daemon is not supported on this platform because native bindings are not available."
+  "1160": "Turbopack daemon is not supported on this platform because native bindings are not available.",
+  "1161": "--port requires a valid port number (0-65535), got: %s",
+  "1162": "--experimental-project requires a directory argument"
 }
