@@ -518,6 +518,8 @@ async function exportAppImpl(
       maxPostponedStateSizeBytes: parseMaxPostponedStateSize(
         nextConfig.experimental.maxPostponedStateSize
       ),
+      turbopackBrowserEsmChunks:
+        nextConfig.experimental.turbopackBrowserEsmChunks ?? false,
     },
     reactMaxHeadersLength: nextConfig.reactMaxHeadersLength,
   }
