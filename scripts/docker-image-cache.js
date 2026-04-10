@@ -19,15 +19,22 @@ const fs = require('fs')
 const os = require('os')
 
 const { parseArgs } = require('node:util')
-const { values: flags } = parseArgs({
+const { values: flags, positionals } = parseArgs({
   args: process.argv.slice(2),
   options: {
     force: { type: 'boolean', default: false },
   },
+  allowPositionals: true,
 })
 
 const REPO_ROOT = path.resolve(__dirname, '..')
-const IMAGE_NAME = 'next-swc-builder:latest'
+
+// Target: "linux" (default) or "windows"
+const TARGET_STAGE = positionals[0] || 'linux'
+const IMAGE_NAME =
+  TARGET_STAGE === 'windows'
+    ? 'next-swc-builder-win:latest'
+    : 'next-swc-builder:latest'
 
 // docker export/import strips all image metadata. These --change flags
 // restore the ENV and WORKDIR that the Dockerfile sets, so that tools
@@ -49,9 +56,10 @@ const CACHE_INPUTS = [
 function computeCacheKey() {
   // Turbo cache keys must be hex-only (^[a-fA-F0-9]+$).
   const hash = createHash('sha256')
-  hash.update('docker-image-v4\0')
-  // Include host architecture — the image contains native binaries
-  // (Rust toolchain, cargo-xwin, etc.) that are arch-specific.
+  hash.update('docker-image-v7\0')
+  // Include target stage and host architecture — the image contains native
+  // binaries (Rust toolchain, cargo-xwin, etc.) that are arch-specific.
+  hash.update(`stage:${TARGET_STAGE}\0`)
   hash.update(`arch:${os.arch()}\0`)
   for (const file of CACHE_INPUTS) {
     hash.update(file + '\0')
@@ -69,7 +77,7 @@ function buildImage() {
   )
   try {
     execSync(
-      `docker build -t ${IMAGE_NAME} -f ${path.join(REPO_ROOT, 'scripts/native-builder.Dockerfile')} ${ctx}`,
+      `docker build --target ${TARGET_STAGE} -t ${IMAGE_NAME} -f ${path.join(REPO_ROOT, 'scripts/native-builder.Dockerfile')} ${ctx}`,
       { stdio: 'inherit' }
     )
   } finally {
@@ -92,7 +100,7 @@ async function main() {
   // Show redacted endpoint for debugging (scheme + first 2 chars of host)
   const apiUrl = new URL(process.env.TURBO_API || 'https://vercel.com')
   const redactedApi = `${apiUrl.protocol}//${apiUrl.hostname.slice(0, 2)}***`
-  console.log(`Docker image: ${IMAGE_NAME}`)
+  console.log(`Docker image: ${IMAGE_NAME} (stage: ${TARGET_STAGE})`)
   console.log(`Cache key: ${key}`)
   console.log(`Cache endpoint: ${redactedApi}`)
 

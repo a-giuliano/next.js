@@ -138,7 +138,7 @@ jobs:
   # Generate the build matrix for native binaries.
   # For automated-preview, only build linux/x86_64/gnu (the target we run automated tests against).
   generate-native-matrix:
-    if: ${{ needs.deploy-target.outputs.value != 'skipped' }}
+    # if: ${{ needs.deploy-target.outputs.value != 'skipped' }}
     needs:
       - deploy-target
     runs-on: ubuntu-latest
@@ -151,7 +151,7 @@ jobs:
           config: |
             deployTarget: ${{ needs.deploy-target.outputs.value }}
           input: |
-            $if: "config.deployTarget != 'automated-preview' || (this.target == 'x86_64-unknown-linux-gnu')"
+            # $if: "config.deployTarget != 'automated-preview' || (this.target == 'x86_64-unknown-linux-gnu')"
             target:
               $dynamic: "`${this.arch}-${this.vendor}-${this.sys}${this.abi ? '-' + this.abi : ''}`"
             build_task: build-native-release
@@ -162,7 +162,8 @@ jobs:
                 vendor: apple
                 sys: darwin
               windows:
-                host: "['self-hosted', 'windows', 'x64']"
+                host: "['self-hosted', 'linux', 'x64', 'metal']"
+                docker: next-swc-builder-win:latest
                 vendor: pc
                 sys: windows
                 abi: msvc
@@ -262,7 +263,7 @@ jobs:
       # Only load the Docker image if we need to compile (native cache miss)
       - name: Build/restore Docker image
         if: ${{ matrix.docker && steps.native-cache.outputs.HIT != 'yes' }}
-        run: node scripts/docker-image-cache.js
+        run: node scripts/docker-image-cache.js ${{ matrix.sys == 'windows' && 'windows' || 'linux' }}
 
       - name: Build in docker
         if: ${{ matrix.docker && steps.native-cache.outputs.HIT != 'yes' }}

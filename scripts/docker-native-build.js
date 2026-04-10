@@ -14,7 +14,8 @@ const fs = require('fs')
 const os = require('os')
 
 const REPO_ROOT = path.resolve(__dirname, '..')
-const DOCKER_IMAGE = 'next-swc-builder:latest'
+const DOCKER_IMAGE_LINUX = 'next-swc-builder:latest'
+const DOCKER_IMAGE_WIN = 'next-swc-builder-win:latest'
 
 const TARGETS = [
   {
@@ -41,6 +42,18 @@ const TARGETS = [
     abi: 'musl',
     napiPlatform: 'linux-arm64-musl',
   },
+  {
+    target: 'x86_64-pc-windows-msvc',
+    arch: 'x86_64',
+    abi: 'msvc',
+    napiPlatform: 'win32-x64-msvc',
+  },
+  {
+    target: 'aarch64-pc-windows-msvc',
+    arch: 'aarch64',
+    abi: 'msvc',
+    napiPlatform: 'win32-arm64-msvc',
+  },
 ]
 
 // Map uname -m to our arch names
@@ -55,6 +68,7 @@ const { values: flags, positionals } = parseArgs({
     quick: { type: 'boolean', default: false },
     'host-target': { type: 'boolean', default: false },
     rebuild: { type: 'boolean', default: false },
+    'skip-image': { type: 'boolean', default: false },
     test: { type: 'boolean', default: false },
     help: { type: 'boolean', short: 'h', default: false },
   },
@@ -63,7 +77,7 @@ const { values: flags, positionals } = parseArgs({
 
 if (flags.help) {
   console.log(
-    'Usage: node scripts/docker-native-build.js [--quick] [--host-target] [--rebuild] [--test] [filter]'
+    'Usage: node scripts/docker-native-build.js [--quick] [--host-target] [--rebuild] [--skip-image] [--test] [filter]'
   )
   process.exit(0)
 }
@@ -71,6 +85,7 @@ if (flags.help) {
 const quick = flags.quick
 const hostTarget = flags['host-target']
 const rebuild = flags.rebuild
+const skipImage = flags['skip-image']
 const test = flags.test
 const filter = positionals[0] || ''
 
@@ -85,17 +100,24 @@ if (targets.length === 0) {
   process.exit(1)
 }
 
+// --- Determine which Docker image stage to use ---
+const isWindows = targets.some((t) => t.target.includes('windows'))
+const dockerStage = isWindows ? 'windows' : 'linux'
+const DOCKER_IMAGE = isWindows ? DOCKER_IMAGE_WIN : DOCKER_IMAGE_LINUX
+
 // --- Build/restore Docker image ---
 function ensureDockerImage() {
   const args = rebuild ? ['--force'] : []
   execFileSync(
     'node',
-    [path.join(__dirname, 'docker-image-cache.js'), ...args],
+    [path.join(__dirname, 'docker-image-cache.js'), ...args, dockerStage],
     { stdio: 'inherit' }
   )
 }
 
-ensureDockerImage()
+if (!skipImage) {
+  ensureDockerImage()
+}
 
 // --- Build targets ---
 const buildTask = quick
@@ -131,6 +153,8 @@ for (const { target, arch, abi, napiPlatform } of targets) {
   if (fs.existsSync(nodeFile)) fs.unlinkSync(nodeFile)
 
   const ENV = {
+    // docker import loses ENV metadata, so set PATH explicitly
+    PATH: '/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     CI: '1',
     RUST_BACKTRACE: '1',
     CARGO_TERM_COLOR: 'always',
