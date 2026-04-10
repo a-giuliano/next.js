@@ -694,11 +694,6 @@ impl EcmascriptModuleAsset {
     }
 
     #[turbo_tasks::function]
-    pub fn compute_exports(self: Vc<Self>) -> Vc<EcmascriptExports> {
-        compute_ecmascript_module_exports(self, None)
-    }
-
-    #[turbo_tasks::function]
     pub fn options(&self) -> Vc<EcmascriptOptions> {
         *self.options
     }
@@ -803,7 +798,7 @@ impl ChunkableModule for EcmascriptModuleAsset {
 impl EcmascriptChunkPlaceable for EcmascriptModuleAsset {
     #[turbo_tasks::function]
     fn get_exports(self: Vc<Self>) -> Vc<EcmascriptExports> {
-        self.compute_exports()
+        compute_ecmascript_module_exports(self, None)
     }
 
     #[turbo_tasks::function]
