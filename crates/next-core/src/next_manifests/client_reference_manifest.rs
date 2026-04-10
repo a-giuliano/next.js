@@ -283,9 +283,6 @@ async fn build_manifest(
                             .get_path_to(&chunk_path)
                             .map(ToString::to_string)
                     })
-                    // It's possible that a chunk also emits CSS files, that will
-                    // be handled separately.
-                    .filter(|path| path.ends_with(".js"))
                     .map(|path| {
                         format!(
                             "{}{}{}",
