@@ -485,9 +485,7 @@ declare module 'next/dist/compiled/@next/react-refresh-utils/dist/ReactRefreshWe
 }
 
 declare module 'next/dist/compiled/commander' {
-  import commander from 'commander'
   export * from 'commander'
-  export default commander
 }
 
 declare module 'next/dist/compiled/node-html-parser' {
@@ -572,7 +570,7 @@ declare module 'next/dist/compiled/@hapi/accept' {
 }
 
 declare module 'next/dist/compiled/acorn' {
-  import m from 'acorn'
+  import m = require('acorn')
   export = m
 }
 
@@ -780,7 +778,7 @@ declare module 'next/dist/compiled/semver' {
   export = m
 }
 declare module 'next/dist/compiled/postcss-scss' {
-  import m from 'postcss-scss'
+  import m = require('postcss-scss')
   export = m
 }
 
@@ -823,14 +821,6 @@ declare module 'next/dist/compiled/ws' {
 declare module 'next/dist/compiled/@vercel/routing-utils' {
   import m from '@vercel/routing-utils/dist/superstatic'
   export = m
-}
-
-declare module 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp' {
-  export * from '@modelcontextprotocol/sdk/server/mcp'
-}
-
-declare module 'next/dist/compiled/@modelcontextprotocol/sdk/server/streamableHttp' {
-  export * from '@modelcontextprotocol/sdk/server/streamableHttp'
 }
 
 declare module 'next/dist/compiled/comment-json' {

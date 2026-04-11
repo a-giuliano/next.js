@@ -7,7 +7,7 @@
  * module-not-found, syntax errors, and other transform failures across all
  * routes.
  */
-import type { McpServer } from 'next/dist/compiled/@modelcontextprotocol/sdk/server/mcp'
+import type { McpServer } from '../../../compiled/@modelcontextprotocol/sdk/server/mcp'
 import type { Project } from '../../../build/swc/types'
 import { mcpTelemetryTracker } from '../mcp-telemetry-tracker'
 import { formatCompilationIssues } from './utils/format-compilation-issues'
