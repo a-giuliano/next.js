@@ -37,10 +37,14 @@ export function dynamicBodyMessage(route: string): string {
 
 export function runtimeMetadataMessage(route: string): string {
   return (
-    `Route "${route}": A request-time API was used inside ` +
-    `generateMetadata (or you have file-based metadata like icons that ` +
-    `depend on dynamic params). The rest of the page could have been ` +
-    `fully prerendered.\n\n` +
+    `Route "${route}" has metadata that blocks loading.\n\n` +
+    `Cause: A request-time API was used in generateMetadata() (e.g. ` +
+    `cookies(), headers()), but the rest of the page is fully static. ` +
+    `Metadata can't be streamed, so the entire page blocks on every ` +
+    `request.\n\n` +
+    `Fix: Remove the request-time API and use cached data, or mark ` +
+    `another part of the page as dynamic to confirm this is ` +
+    `intentional.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-metadata`
   )
@@ -48,10 +52,13 @@ export function runtimeMetadataMessage(route: string): string {
 
 export function dynamicMetadataMessage(route: string): string {
   return (
-    `Route "${route}": Data that can't be resolved at build time was ` +
-    `used inside generateMetadata (e.g. cookies(), headers(), or an ` +
-    `uncached fetch). The rest of the page could have been fully ` +
-    `prerendered.\n\n` +
+    `Route "${route}" has metadata that blocks loading.\n\n` +
+    `Cause: generateMetadata() depends on uncached data (e.g. an ` +
+    `uncached fetch() or connection()), but the rest of the page is ` +
+    `fully static. Metadata can't be streamed, so the entire page ` +
+    `blocks on every request.\n\n` +
+    `Fix: Cache the data with "use cache", or mark another part of ` +
+    `the page as dynamic to confirm this is intentional.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-metadata`
   )
@@ -59,9 +66,14 @@ export function dynamicMetadataMessage(route: string): string {
 
 export function runtimeViewportMessage(route: string): string {
   return (
-    `Route "${route}": A request-time API was used inside ` +
-    `generateViewport. Viewport metadata must be available on page ` +
-    `load, so this prevents prerendering.\n\n` +
+    `Route "${route}" has viewport config that blocks loading.\n\n` +
+    `Cause: A request-time API was used in generateViewport() (e.g. ` +
+    `cookies(), headers()), but the rest of the page is fully static. ` +
+    `Viewport configuration can't be streamed, so the entire page ` +
+    `blocks on every request.\n\n` +
+    `Fix: Remove the request-time API and use cached data, or mark ` +
+    `another part of the page as dynamic to confirm this is ` +
+    `intentional.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-viewport`
   )
@@ -69,10 +81,13 @@ export function runtimeViewportMessage(route: string): string {
 
 export function dynamicViewportMessage(route: string): string {
   return (
-    `Route "${route}": Data that can't be resolved at build time was ` +
-    `used inside generateViewport (e.g. cookies(), headers(), or an ` +
-    `uncached fetch). Viewport metadata must be available on page ` +
-    `load, so this prevents prerendering.\n\n` +
+    `Route "${route}" has viewport config that blocks loading.\n\n` +
+    `Cause: generateViewport() depends on uncached data (e.g. an ` +
+    `uncached fetch() or connection()), but the rest of the page is ` +
+    `fully static. Viewport configuration can't be streamed, so the ` +
+    `entire page blocks on every request.\n\n` +
+    `Fix: Cache the data with "use cache", or mark another part of ` +
+    `the page as dynamic to confirm this is intentional.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-viewport`
   )
@@ -80,8 +95,13 @@ export function dynamicViewportMessage(route: string): string {
 
 export function disallowedDynamicViewportMessage(route: string): string {
   return (
-    `Route "${route}": generateViewport depends on data that can't be ` +
-    `resolved at build time, which prevents prerendering.\n\n` +
+    `Route "${route}" has viewport config that blocks loading.\n\n` +
+    `Cause: generateViewport() depends on data that can't be resolved ` +
+    `at build time, but the rest of the page is fully static. ` +
+    `Viewport configuration can't be streamed, so the entire page ` +
+    `blocks on every request.\n\n` +
+    `Fix: Cache the data with "use cache", or mark another part of ` +
+    `the page as dynamic to confirm this is intentional.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-viewport`
   )
@@ -89,8 +109,13 @@ export function disallowedDynamicViewportMessage(route: string): string {
 
 export function disallowedDynamicMetadataMessage(route: string): string {
   return (
-    `Route "${route}": generateMetadata depends on data that can't be ` +
-    `resolved at build time, but the rest of the route does not.\n\n` +
+    `Route "${route}" has metadata that blocks loading.\n\n` +
+    `Cause: generateMetadata() depends on data that can't be resolved ` +
+    `at build time, but the rest of the page is fully static. ` +
+    `Metadata can't be streamed, so the entire page blocks on every ` +
+    `request.\n\n` +
+    `Fix: Cache the data with "use cache", or mark another part of ` +
+    `the page as dynamic to confirm this is intentional.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-metadata`
   )
