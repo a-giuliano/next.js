@@ -10,10 +10,12 @@ export function runtimeBodyMessage(route: string): string {
     `  - await params (in a Page or Layout)\n` +
     `  - await searchParams (in a Page)\n` +
     `  - draftMode()\n\n` +
-    `Fix: Wrap the component that calls the API in <Suspense>, move ` +
-    `the API call into a child component wrapped in <Suspense>, or ` +
-    `add a loading.js file to the route.\n\n` +
-    `Learn more: https://nextjs.org/docs/messages/blocking-route`
+    `Possible fixes (each has different trade-offs):\n` +
+    `  - Wrap the component in <Suspense> (streams just that component)\n` +
+    `  - Move the API call into a child component wrapped in <Suspense>\n` +
+    `  - Add a loading.js file to the route (streams the whole page)\n\n` +
+    `Which fix is right depends on your use case. Learn more:\n` +
+    `https://nextjs.org/docs/messages/blocking-route`
   )
 }
 
@@ -29,9 +31,12 @@ export function dynamicBodyMessage(route: string): string {
     `  - connection()\n` +
     `  - cookies(), headers()\n` +
     `  - await params, await searchParams\n\n` +
-    `Fix: Cache the data with "use cache", wrap the component in ` +
-    `<Suspense>, or add a loading.js file to the route.\n\n` +
-    `Learn more: https://nextjs.org/docs/messages/blocking-route`
+    `Possible fixes (each has different trade-offs):\n` +
+    `  - "use cache": cache the data so it can be prerendered\n` +
+    `  - <Suspense>: stream just the dynamic component\n` +
+    `  - loading.js: stream the whole page with a fallback\n\n` +
+    `Which fix is right depends on your use case. Learn more:\n` +
+    `https://nextjs.org/docs/messages/blocking-route`
   )
 }
 
@@ -42,9 +47,9 @@ export function runtimeMetadataMessage(route: string): string {
     `cookies(), headers()), but the rest of the page is fully static. ` +
     `This makes metadata the only dynamic part, so the entire page ` +
     `can't be prerendered.\n\n` +
-    `Fix: Remove the request-time API and use cached data, or mark ` +
-    `another part of the page as dynamic to confirm this is ` +
-    `intentional.\n\n` +
+    `Fix: Replace the request-time API with cached data, or add ` +
+    `connection() inside <Suspense> in the page body to confirm ` +
+    `the page should be dynamic.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-metadata`
   )
@@ -71,9 +76,9 @@ export function runtimeViewportMessage(route: string): string {
     `cookies(), headers()), but the rest of the page is fully static. ` +
     `This makes viewport configuration the only dynamic part, so the ` +
     `entire page can't be prerendered.\n\n` +
-    `Fix: Remove the request-time API and use cached data, or mark ` +
-    `another part of the page as dynamic to confirm this is ` +
-    `intentional.\n\n` +
+    `Fix: Replace the request-time API with cached data, or add ` +
+    `connection() inside <Suspense> in the page body to confirm ` +
+    `the page should be dynamic.\n\n` +
     `Learn more: ` +
     `https://nextjs.org/docs/messages/next-prerender-dynamic-viewport`
   )
